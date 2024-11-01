@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import { MockDataService } from "../../services/mockDataService";
+import { MockDataService } from "@/services/mockDataService";
 import ProductTable from "./ProductTable";
 import SummaryStatistics from "./SummaryStatistics";
 import Pagination from "./Pagination";
-import { Product } from "../../types/Product";
+import { Product } from "@/types/Product";
 
 const Dashboard = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -18,6 +18,9 @@ const Dashboard = () => {
     const fetchProducts = async () => {
       try {
         const data = await MockDataService.fetchProducts();
+
+        console.log("🚀 ~ fetchProducts ~ data:", data);
+
         setProducts(data);
       } catch (err) {
         setError((err as Error).message);
@@ -75,13 +78,11 @@ const Dashboard = () => {
           <SummaryStatistics products={products} />
           <ProductTable
             products={currentProducts}
-            {...{ searchTerm, setSearchTerm }}
+            {...{ searchTerm, setSearchTerm, setProducts }}
           />
           <Pagination
             totalItems={products.length}
-            itemsPerPage={itemsPerPage}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
+            {...{ itemsPerPage, currentPage, setCurrentPage }}
           />
         </>
       )}

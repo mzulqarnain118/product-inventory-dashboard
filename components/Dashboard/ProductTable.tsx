@@ -1,45 +1,74 @@
 import { Product } from "../../types/Product";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { MockDataService } from "@/services/mockDataService";
 
 interface ProductTableProps {
   products: Product[];
-  searchTerm: string; // Change to string for search input
-  setSearchTerm: (term: string) => void; // Function to update the search term
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  setProducts: (products: Product[]) => void; // Correct type
 }
 
 const ProductTable: React.FC<ProductTableProps> = ({
   products,
   searchTerm,
   setSearchTerm,
+  setProducts,
 }) => {
   const [sortColumn, setSortColumn] = useState<keyof Product>("name");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
-  // Handle sorting of products
-  const sortedProducts = [...products].sort((a, b) => {
+  useEffect(() => {
+    // Fetch available categories on mount
+    MockDataService.fetchCategories().then((fetchedCategories) =>
+      setCategories(fetchedCategories)
+    );
+  }, []);
+
+  // Filter products based on search term and selected category
+  const filteredProducts = products.sort((a, b) => {
     const isAsc = sortOrder === "asc";
-    const aValue = a[sortColumn] ?? ""; // Default to empty string for null/undefined
-    const bValue = b[sortColumn] ?? ""; // Default to empty string for null/undefined
+    const aValue = a[sortColumn] ?? "";
+    const bValue = b[sortColumn] ?? "";
 
     if (aValue < bValue) return isAsc ? -1 : 1;
     if (aValue > bValue) return isAsc ? 1 : -1;
     return 0;
   });
 
-  // Filter products based on the search term
-  const filteredProducts = sortedProducts.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
-    <div className="overflow-x-auto shadow-md rounded-lg">
+    <div className="overflow-x-auto shadow-md rounded-lg p-4">
+      {/* Search Input */}
       <input
         type="text"
         placeholder="Search products..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="border border-gray-300 p-2 rounded mb-4"
+        className="border border-gray-300 p-2 text-black rounded w-full mb-4 focus:outline-none focus:border-blue-500"
       />
+
+      {/* Category Filter Dropdown */}
+      <select
+        value={selectedCategory}
+        onChange={async (e) => {
+          setSelectedCategory(e.target.value);
+          const productsByCategory =
+            await MockDataService.fetchProductsByCategory(e.target.value);
+          setProducts(productsByCategory);
+        }}
+        className="border border-gray-300 p-2 text-black rounded mb-4 w-full focus:outline-none focus:border-blue-500"
+      >
+        <option value="">Select Categories</option>
+        {categories.map((category) => (
+          <option key={category} value={category}>
+            {category}
+          </option>
+        ))}
+      </select>
+
+      {/* Product Table */}
       <table className="min-w-full bg-white border border-gray-200">
         <thead>
           <tr className="bg-gray-100 text-gray-600">
@@ -55,7 +84,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                 className="cursor-pointer py-2 px-4 border-b text-left hover:bg-gray-200 transition-colors duration-200"
               >
                 {col.charAt(0).toUpperCase() + col.slice(1)}{" "}
-                {sortColumn === col ? (sortOrder === "asc" ? "↑" : "↓") : ""}
+                {sortColumn === col ? (sortOrder === "asc" ? "↑" : "↓") : "↑"}
               </th>
             ))}
           </tr>

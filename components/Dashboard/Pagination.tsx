@@ -4,6 +4,7 @@ interface PaginationProps {
   currentPage: number;
   setCurrentPage: (page: number) => void;
 }
+import styles from "./Pagination.module.css";
 
 const Pagination: React.FC<PaginationProps> = ({
   totalItems,
@@ -48,9 +49,11 @@ const Pagination: React.FC<PaginationProps> = ({
           <button
             key={index + 1}
             onClick={() => handlePageChange(index + 1)}
-            className={`mx-1 px-3 py-1 rounded-lg text-sm transition duration-150 ease-in-out ${
+            className={` ${
+              styles["pagination-button"]
+            } mx-1 px-3 py-1 rounded-lg text-sm transition duration-150 ease-in-out ${
               currentPage === index + 1
-                ? "bg-blue-500 text-white"
+                ? `${styles["active"]} bg-blue-500 text-white`
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
             aria-current={currentPage === index + 1 ? "page" : undefined} // Accessibility improvement

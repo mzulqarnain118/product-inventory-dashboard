@@ -53,13 +53,23 @@ To run this project locally, follow these steps:
 3. Click on the column headers to sort the products.
 4. Navigate through pages using the pagination controls at the bottom of the table.
 
+## Testing
+
+1. To run the unit tests, use the following command:
+
+   ```bash
+   npm test
+   ```
+
+2. Ensure that all tests pass successfully.
+
 ## Demo
 
-You can view the live demo of the project at: [Demo URL](https://your-demo-url.com)
+You can view the live demo of the project at: [Demo URL](https://product-inventory-dashboard-7gvg2iouw.vercel.app)
 
 ## GitHub Repository
 
-Access the source code and contribute to the project here: [GitHub Repository](https://github.com/yourusername/product-management-dashboard)
+Access the source code and contribute to the project here: [GitHub Repository](https://github.com/mzulqarnain118/product-inventory-dashboard)
 
 ## Contributing
 

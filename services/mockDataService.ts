@@ -92,11 +92,6 @@ export class MockDataService {
     // Simulate network delay
     await this.delay(800);
 
-    // Simulate potential errors (1 in 10 chance)
-    if (Math.random() < 0.1) {
-      throw new Error("Failed to fetch products");
-    }
-
     return mockProducts;
   }
 

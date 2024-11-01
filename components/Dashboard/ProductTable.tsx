@@ -60,7 +60,9 @@ const ProductTable: React.FC<ProductTableProps> = ({
         }}
         className="border border-gray-300 p-2 text-black rounded mb-4 w-full focus:outline-none focus:border-blue-500"
       >
-        <option value="">Select Categories</option>
+        <option disabled value="">
+          Select Categories
+        </option>
         {categories.map((category) => (
           <option key={category} value={category}>
             {category}
@@ -93,23 +95,23 @@ const ProductTable: React.FC<ProductTableProps> = ({
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
               <tr
-                key={product.id}
+                key={product?.id}
                 className="hover:bg-gray-50 transition-colors duration-200"
               >
                 <td className="py-2 px-4 border-b text-black">
-                  {product.name || "N/A"}
+                  {product?.name || "N/A"}
                 </td>
                 <td className="py-2 px-4 border-b text-black">
-                  {product.category || "N/A"}
+                  {product?.category || "N/A"}
                 </td>
                 <td className="py-2 px-4 border-b text-black">
-                  ${product.price?.toFixed(2) || "N/A"}
+                  ${product?.price?.toFixed(2) || "N/A"}
                 </td>
                 <td className="py-2 px-4 border-b text-black">
-                  {product.stock ?? "N/A"}
+                  {product?.stock ?? "N/A"}
                 </td>
                 <td className="py-2 px-4 border-b text-black">
-                  {product.lastUpdated || "N/A"}
+                  {product?.lastUpdated || "N/A"}
                 </td>
               </tr>
             ))

@@ -5,6 +5,8 @@ import ProductTable from "./ProductTable";
 import SummaryStatistics from "./SummaryStatistics";
 import Pagination from "./Pagination";
 import { Product } from "@/types/Product";
+import { Oval } from "react-loader-spinner";
+import styles from "./Dashboard.module.css";
 
 const Dashboard = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -18,9 +20,6 @@ const Dashboard = () => {
     const fetchProducts = async () => {
       try {
         const data = await MockDataService.fetchProducts();
-
-        console.log("🚀 ~ fetchProducts ~ data:", data);
-
         setProducts(data);
       } catch (err) {
         setError((err as Error).message);
@@ -63,16 +62,33 @@ const Dashboard = () => {
     indexOfLastProduct
   );
 
+  if (loading) {
+    return (
+      <div className={styles.overlay}>
+        <Oval
+          height={80}
+          width={80}
+          color="#4fa94d"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+          ariaLabel="oval-loading"
+          secondaryColor="#4fa94d"
+          strokeWidth={2}
+          strokeWidthSecondary={2}
+        />
+      </div>
+    );
+  }
+  if (error) return <p className="text-red-500">{error}</p>;
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold mb-4 text-black">
         Product Inventory Dashboard
       </h1>
-
-      {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p className="text-red-500">{error}</p>
+      {products.length === 0 ? (
+        <p>No products found</p>
       ) : (
         <>
           <SummaryStatistics products={products} />
